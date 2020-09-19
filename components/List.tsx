@@ -3,12 +3,12 @@ import ListItem from './ListItem'
 import { Weapon } from '../interfaces/weapons'
 
 type Props = {
-  items: Weapon[]
+  weapons: Weapon[]
 }
 
-const List = ({ items }: Props) => (
+const List = ({ weapons }: Props) => (
   <ul>
-    {items.map((item) => (
+    {weapons.map((item) => (
       <li key={item.id}>
         <ListItem data={item} />
       </li>
