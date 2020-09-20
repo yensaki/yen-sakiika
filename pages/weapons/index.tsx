@@ -26,7 +26,8 @@ export const getStaticProps: GetStaticProps = async () => {
     const res = await getResponse()
     const weapons: Weapon[] = []
     await res.forEach((doc) => {
-        weapons.push(doc.data())
+        const weapon = doc.data() as Weapon
+        weapons.push(weapon)
     });
 
     return { props: { weapons } } 
