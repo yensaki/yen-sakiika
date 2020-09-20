@@ -13,28 +13,19 @@ type Props = {
 const WithStaticProps = ({ weapons }: Props) => (
     <Layout title="Weapons List">
         <h1>Weapons List</h1>
-        <p>
-            Example fetching data from inside <code>getStaticProps()</code>.
-        </p>
         <p>You are currently on: /weapons</p>
         <List weapons={weapons} />
     </Layout>
 )
 
- async function getResponse() {
-
-    console.log("eee")
+async function getResponse() {
     return fireStore.collection("weapons").get()
-
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-    // const weapons: Weapon[] = [{id: 1, name: 'a'}]
     const res = await getResponse()
     const weapons: Weapon[] = []
     await res.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        console.log(doc.data().name)
         weapons.push(doc.data())
     });
 
