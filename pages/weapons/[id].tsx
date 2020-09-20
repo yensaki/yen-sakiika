@@ -7,11 +7,18 @@ import ListDetail from '../../components/ListDetail'
 import fireStore from '../../interfaces/firebase'
 
 type Props = {
-    item?: Weapon
-    errors?: string
+    weapon?: Weapon
 }
 
-const StaticPropsDetail = ({ weapon, errors }: Props) => {
+type Param = {
+    id: string
+}
+
+type Path = {
+    params: Param
+}
+
+const StaticPropsDetail = ({ weapon }: Props) => {
     return (
         <Layout title="Weapon Detail">
             { weapon && <ListDetail item={weapon} />}
@@ -21,22 +28,17 @@ const StaticPropsDetail = ({ weapon, errors }: Props) => {
 
 export default StaticPropsDetail
 
-async function getResponse(id) {
-
-    return fireStore.collection("weapons").doc(id.toString()).get()
-
+async function getResponse(id: string) {
+    return fireStore.collection("weapons").doc(id).get()
 }
 
 async function getIndex() {
-
-    console.log("eee")
     return fireStore.collection("weapons").get()
-
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
     const res = await getIndex()
-    const paths = []
+    const paths: Path[] = []
     await res.forEach((doc) => {
         paths.push({
             params: { id: doc.id.toString() }
@@ -47,12 +49,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const id = params?.id
-    console.log("getStaticProps")
-    console.log(id)
+    let id = params?.id
+    if ( typeof id !== "string") {
+        id = "0"
+    }
     const res = await getResponse(id)
     const weapon = res.data()
-    console.log(weapon)
 
     return { props: { weapon } } 
 }
