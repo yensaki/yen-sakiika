@@ -1,4 +1,4 @@
-import { NextPage, NextPageContext } from 'next'
+import { NextPage } from 'next'
 
 import { Weapon } from '../../interfaces/weapons'
 import Layout from '../../components/Layout'
