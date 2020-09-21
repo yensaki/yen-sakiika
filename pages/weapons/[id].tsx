@@ -1,4 +1,4 @@
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { NextPage, NextPageContext } from 'next'
 
 import { Weapon } from '../../interfaces/weapons'
 import Layout from '../../components/Layout'
@@ -10,15 +10,7 @@ type Props = {
     weapon?: Weapon
 }
 
-type Param = {
-    id: string
-}
-
-type Path = {
-    params: Param
-}
-
-const StaticPropsDetail = ({ weapon }: Props) => {
+const Detail: NextPage<Props> = ({ weapon }) => {
     return (
         <Layout title="Weapon Detail">
             { weapon && <ListDetail item={weapon} />}
@@ -26,35 +18,19 @@ const StaticPropsDetail = ({ weapon }: Props) => {
     )
 }
 
-export default StaticPropsDetail
-
-async function getResponse(id: string) {
-    return fireStore.collection("weapons").doc(id).get()
-}
-
-async function getIndex() {
-    return fireStore.collection("weapons").get()
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-    const res = await getIndex()
-    const paths: Path[] = []
-    await res.forEach((doc) => {
-        paths.push({
-            params: { id: doc.id.toString() }
-        })
-    })
-
-    return { paths, fallback: false }
-}
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-    let id = params?.id
-    if ( typeof id !== "string") {
-        id = "0"
+export const getServerSideProps = async (context: any) => {
+    let id =  "1"
+    if (context) {
+        id = context.query.id
     }
     const res = await getResponse(id)
-    const weapon = res.data()
+    const weapon = res.data() as Weapon
+    return { props: { weapon } }
+}
 
-    return { props: { weapon } } 
+export default Detail
+
+async function getResponse(id: string) {
+    console.log("getResponse")
+    return fireStore.collection("weapons").doc(id).get()
 }
