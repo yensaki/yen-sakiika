@@ -17,5 +17,5 @@ try {
 } catch {
     console.log("error")
 }
-let fireStore = firebase.firestore()
+const fireStore = firebase.firestore()
 export default fireStore
