@@ -1,4 +1,5 @@
 // import Link from 'next/link'
+import { GetStaticProps } from 'next'
 import { Weapon } from '../../interfaces/weapons'
 
 import Layout from '../../components/Layout'
@@ -17,7 +18,18 @@ const WithStaticProps = ({ weapons }: Props) => (
     </Layout>
 )
 
-export const getServerSideProps = async () => {
+// export const getServerSideProps = async () => {
+//     const res = await fireStore.collection("weapons").get()
+//     const weapons: Weapon[] = []
+//     await res.forEach((doc) => {
+//         const weapon = doc.data() as Weapon
+//         weapons.push(weapon)
+//     });
+
+//     return { props: { weapons } } 
+// }
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
     const res = await fireStore.collection("weapons").get()
     const weapons: Weapon[] = []
     await res.forEach((doc) => {

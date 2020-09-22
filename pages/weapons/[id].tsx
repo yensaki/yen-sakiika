@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { GetStaticProps, GetStaticPaths } from 'next'
 
 import { Weapon } from '../../interfaces/weapons'
 import Layout from '../../components/Layout'
@@ -10,7 +10,7 @@ type Props = {
     weapon?: Weapon
 }
 
-const Detail: NextPage<Props> = ({ weapon }) => {
+const Detail = ({ weapon }: Props) => {
     return (
         <Layout title="Weapon Detail">
             { weapon && <ListDetail item={weapon} />}
@@ -18,14 +18,18 @@ const Detail: NextPage<Props> = ({ weapon }) => {
     )
 }
 
-export const getServerSideProps = async (context: any) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+    return { paths: [], fallback: true }
+}
+
+export const getStaticProps: GetStaticProps<Props> = async (context: any) => {
     let id =  "1"
-    if (context) {
-        id = context.query.id
+    if (context && context.params) {
+        id = context.params.id
     }
     const res = await getResponse(id)
     const weapon = res.data() as Weapon
-    return { props: { weapon } }
+    return { props: { weapon }, revalidate: 1, }
 }
 
 export default Detail
