@@ -5,6 +5,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "cloudrun": "next start -p ${PORT}",
     "export": "next build && next export",
     "type-check": "tsc"
   },
