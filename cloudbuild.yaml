@@ -1,8 +1,11 @@
 steps:
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=firebaseconfig --format='get(payload.data)' | tr '_-' '/+' | base64 -d > .env" ]
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/yen-sakiika/$COMMIT_SHA', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '-t', 'gcr.io/$PROJECT_ID/yen-sakiika/$COMMIT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/yen-sakiika/$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/gcloud'
   args: 
   - 'run'
