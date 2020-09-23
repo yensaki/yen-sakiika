@@ -10,6 +10,14 @@ type Props = {
     weapon?: Weapon
 }
 
+type Param = {
+    id: string
+}
+
+type Path = {
+    params: Param
+}
+
 const Detail = ({ weapon }: Props) => {
     return (
         <Layout title="Weapon Detail">
@@ -18,23 +26,35 @@ const Detail = ({ weapon }: Props) => {
     )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-    return { paths: [], fallback: true }
-}
-
-export const getStaticProps: GetStaticProps<Props> = async (context: any) => {
-    let id =  "1"
-    if (context && context.params) {
-        id = context.params.id
-    }
-    const res = await getResponse(id)
-    const weapon = res.data() as Weapon
-    return { props: { weapon }, revalidate: 1, }
-}
-
 export default Detail
 
 async function getResponse(id: string) {
-    console.log("getResponse")
     return fireStore.collection("weapons").doc(id).get()
+}
+
+async function getIndex() {
+    return fireStore.collection("weapons").get()
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+    const res = await getIndex()
+    const paths: Path[] = []
+    await res.forEach((doc) => {
+        paths.push({
+            params: { id: doc.id.toString() }
+        })
+    })
+
+    return { paths, fallback: false }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    let id = params?.id
+    if (!id) {
+        id = "0"
+    }
+    const res = await getResponse(id.toString())
+    const weapon = res.data() as Weapon
+
+    return { props: { weapon } } 
 }
