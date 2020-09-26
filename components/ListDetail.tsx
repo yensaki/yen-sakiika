@@ -10,6 +10,8 @@ const ListDetail = ({ item: weapon }: ListDetailProps) => (
   <div>
     <h1>Detail for {weapon.name}</h1>
     <p>ID: {weapon.id}</p>
+    <p>Category: {weapon.category}</p>
+    <p>SubWeapon: {weapon.sub_weapon.name}</p>
   </div>
 )
 
