@@ -10,6 +10,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@firebase/firestore-types": "^1.13.0",
     "firebase": "^7.21.0",
     "firebase-tools": "^8.10.0",
     "next": "latest",
