@@ -1,12 +1,11 @@
 // import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import { Weapon } from '../../interfaces/weapons'
-import { SubWeapon } from '../../interfaces/sub_weapons'
 
 import Layout from '../../components/Layout'
 import List from '../../components/List'
 import fireStore from '../../interfaces/firebase'
-import { DocumentSnapshot, DocumentReference } from '@firebase/firestore-types'
+import { DocumentSnapshot } from '@firebase/firestore-types'
 
 type Props = {
     weapons: Weapon[]
