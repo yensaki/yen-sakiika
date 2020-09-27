@@ -1,12 +1,11 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 
 import { Weapon } from '../../interfaces/weapons'
-import { SubWeapon } from '../../interfaces/sub_weapons'
 import Layout from '../../components/Layout'
 import '../../components/ListDetail'
 import ListDetail from '../../components/ListDetail'
 import fireStore from '../../interfaces/firebase'
-import { DocumentSnapshot } from '@firebase/firestore-types'
+import { buildSubWeapon } from '../../interfaces/utils'
 
 type Props = {
     weapon?: Weapon
@@ -59,14 +58,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const weapon = await buildSubWeapon(res) as Weapon
 
     return { props: { weapon } } 
-}
-
-async function buildSubWeapon (weapon_document_ref: DocumentSnapshot): Promise<Weapon> {
-    let weapon = weapon_document_ref.data()
-    if (!weapon) { throw new Error("No Weapon") }
-
-    const sub_res = await weapon.sub_weapon.get()
-    const sub_weapon =  sub_res.data() as SubWeapon
-    weapon.sub_weapon = sub_weapon
-    return weapon as Weapon
 }

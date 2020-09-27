@@ -5,7 +5,7 @@ import { Weapon } from '../../interfaces/weapons'
 import Layout from '../../components/Layout'
 import List from '../../components/List'
 import fireStore from '../../interfaces/firebase'
-import { DocumentSnapshot } from '@firebase/firestore-types'
+import { buildSubWeapon } from '../../interfaces/utils'
 
 type Props = {
     weapons: Weapon[]
@@ -22,21 +22,11 @@ const WithStaticProps = ({ weapons }: Props) => (
 export const getStaticProps: GetStaticProps<Props> = async () => {
     const res = await fireStore.collection("weapons").get()
     const weapons: Weapon[] = []
-    res.forEach((doc) => {
-        const weapon = buildSubWeapon(doc)
-        weapons.push(weapon)
+    res.docs.forEach(async (doc) => {
+        weapons.push(await buildSubWeapon(doc))
     });
 
     return { props: { weapons } } 
-}
-
-function buildSubWeapon (weapon_document_ref: DocumentSnapshot): Weapon {
-    let weapon = weapon_document_ref.data()
-    console.log(weapon)
-    if (!weapon) { throw new Error("No Weapon") }
-
-    weapon.sub_weapon = null
-    return weapon as Weapon
 }
 
 export default WithStaticProps
